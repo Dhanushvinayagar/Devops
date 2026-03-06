@@ -1,0 +1,115 @@
+# yaml - YAML Ain't Markup Language
+# file type - yaml/yml
+# Stores data in a file just like JSON,XML
+# Human readable
+# Data serialized - converted file data to bytes for network transfer
+# Intention of YAML is important
+#  --- is a separator that indicates the start of a new document
+#  ... is a separator that indicates the end of document
+
+# strings
+"key" : "value"
+key : value
+key : 'value'
+1 : "value"
+numbervalue : 1
+floatvalue : 1.5
+boolvalue : true
+# true -> y , Y, true, True, TRUE
+# false -> n , N,false, False, FALSE
+
+# explicit data types
+intvalue : !!int 1
+floatvalue : !!float 1.5
+boolvalue : !!bool true
+
+# null
+key : !!null null
+# null -> null, Null, NULL
+
+# if key is null
+~ : this is null key
+
+---
+# multiple line in values
+key1 : | 
+  value1 
+  value2
+
+key2 : >
+  value1
+  value2
+
+
+---
+- value1
+- value1
+- value1
+
+---
+"key" :
+  - value1
+  - value2
+
+...
+
+# seq - sequence of values
+
+cities : !!seq
+  - Mumbai
+  - Pune
+  - Delhi
+
+cities : [Mumbai, Pune, Delhi]
+
+# sparse array - array with null values
+cities : !!seq 
+  - Mumbai
+  - Pune
+  - ~
+  - Delhi
+  - Null
+
+# maps - key value pairs
+map : !!map
+  name : Jo
+  address :
+    city : Mumbai
+    state : Maharashtra
+
+# pairs - key value pairs with same keys
+pairs : !!pairs
+  - phone : 1234567890
+  - phone : 1234567891
+
+# sets - unique values
+#  ? - indicates the key with no value
+set : !!set
+  ? Mumbai
+  ? Pune
+  ? Delhi
+
+---
+
+# resuing data using anchors
+
+school : &school
+  school_name : XYZ
+  phone : 1234567890
+
+student :
+  name : ABC
+  <<: *school
+
+# alias
+student1 : &student
+  name : ABC
+  <<: *student
+
+# references
+student2 : &student
+  name : ABC
+  <<: *student
+  # override phone
+  phone : 1234567891
+  

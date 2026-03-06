@@ -1,0 +1,83 @@
+# for version - the latest will be picked
+
+# docker compose is used for orchestration multiple containers for local development
+# docker compose is a tool for defining and running multi-container docker applications
+# Internally, docker compose uses docker stack and commands
+# Kubernetes is best for production orchestration because of seamless scaling
+# docker compose can be used as yml file for running limited number of containers in prod 
+
+
+# docker-compose.yml should be the file name
+
+# build images for containers
+# if container is not built, use this command to built
+# docker compose build
+
+# start containers
+# docker compose up
+
+# stop containers
+# docker compose stop
+
+# remove containers
+# docker compose down
+
+# Delete all containers with volumes
+# docker compose down -v
+
+services:
+
+  dc_mysql:
+    image: mysql:8.0  
+    container_name: 'dc_mysql_container'
+    restart: always 
+    #restart: unless-stopped | always | on-failure | none 
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root123'
+      MYSQL_DATABASE: 'DB'
+      MYSQL_USER: 'root'
+    ports:
+      - 3306:3306
+    networks:
+      - dc_network
+    volumes:
+      - mysql_db:/var/lib/mysql
+  
+  backend:
+    # give path to dockerfile 
+    build: ./custom_image
+    image: 'my_node_be_image'
+    container_name: 'dc_backend_container'
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root123'
+      MYSQL_DATABASE: 'DB'
+      MYSQL_USER: 'root'
+      # instead of ip address we can use service name dc_mysql 
+      DB_URL: 'mysql://dc_mysql:3306/DB'
+    networks:
+      - dc_network
+      # multiple networks can be given
+    depends_on:
+      - mysql
+  
+  frontend:
+    image: 'my_node_fe_image'
+    container_name: 'dc_frontend_container'
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - dc_network
+    depends_on:
+      - backend
+
+volumes:
+  mysql_db:
+    driver: local
+
+networks:
+  dc_network:
+    driver: bridge

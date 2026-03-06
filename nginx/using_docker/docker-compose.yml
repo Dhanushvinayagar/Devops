@@ -1,0 +1,28 @@
+
+services:
+  app1:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - SERVER_NAME=One
+    container_name: nginx_app1
+    # restart: always
+  
+  app2:
+    build: .
+    ports:
+      - "9001:9000"
+    environment:
+      - SERVER_NAME=Two
+    container_name: nginx_app2
+    # restart: always
+  
+  app3:
+    build: .
+    ports:
+      - "9002:9000"
+    environment:
+      - SERVER_NAME=Three
+    container_name: nginx_app3
+    # restart: always

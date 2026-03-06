@@ -1,0 +1,29 @@
+# If a new deployment is required if we are using pod/service files,  we have to stop the pod and rerun new pod
+# And for reverting back, we have to run the pod of pervious version
+# In this case there will be downtime during the stopping of pod/service
+# Deployment is helps to overcome this problem
+# It will create a new pod and run then it will delete the old pod
+# It will also take care of service as well
+
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: mydeployment
+  labels:
+    app: myapp
+    
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: mycontainer
+          image: my_node_app
+          imagePullPolicy: Never

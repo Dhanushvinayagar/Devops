@@ -1,0 +1,27 @@
+# Replica manifest file - yml file to create a replica set
+
+apiVersion: apps/v1
+
+kind: ReplicaSet
+
+metadata:
+  name: myreplica
+  labels:
+    app: myapp
+
+spec:
+  # specify the number of replicas 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: mycontainer
+          image: my_node_app
+          imagePullPolicy: Never
